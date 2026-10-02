@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter Utility - Question 6</title>
+</head>
+<body>
+    <h1>Currency Converter Utility (Free API Integration)</h1>
+    <p>
+        This application demonstrates consuming a free public API (<strong>Frankfurter Currency API</strong>) 
+        from <strong>both the Backend (Node.js/Express)</strong> and <strong>Frontend (Browser JavaScript)</strong>.
+    </p>
+
+    <hr>
+
+    <h3>Conversion Form:</h3>
+    <form id="converterForm" onsubmit="return false;">
+        <label for="amount">Amount : </label>
+        <input type="number" id="amount" value="100" step="any" min="0.01" style="width: 120px;" required>
+        <br><br>
+
+        <label for="fromCurrency">From Currency : </label>
+        <select id="fromCurrency">
+            <option value="USD" selected>USD - United States Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="GBP">GBP - British Pound</option>
+        </select>
+        <br><br>
+
+        <label for="toCurrency">To Currency : </label>
+        <select id="toCurrency">
+            <option value="INR" selected>INR - Indian Rupee</option>
+            <option value="USD">USD - United States Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+        </select>
+        <br><br>
+
+        <input type="button" value="1. Convert via Backend (Express Server)" onclick="convertViaBackend()">
+        &nbsp;&nbsp;
+        <input type="button" value="2. Convert via Frontend (Browser Fetch)" onclick="convertViaFrontend()">
+    </form>
+
+    <div id="loading" style="display: none; margin-top: 15px; color: blue;">
+        <em>Fetching live exchange rates...</em>
+    </div>
+
+    <div id="errorMessage" style="display: none; margin-top: 15px; color: red;"></div>
+
+    <div id="resultsSection" style="display: none; margin-top: 20px;">
+        <hr>
+        <h3>Conversion Results:</h3>
+        <table border="1" cellpadding="8" cellspacing="0">
+            <tr>
+                <th>Execution Source</th>
+                <td id="resSource"></td>
+            </tr>
+            <tr>
+                <th>Original Amount</th>
+                <td id="resAmount"></td>
+            </tr>
+            <tr>
+                <th>Converted Amount</th>
+                <td><strong style="color: green; font-size: 1.15rem;" id="resConverted"></strong></td>
+            </tr>
+            <tr>
+                <th>Exchange Rate</th>
+                <td id="resRate"></td>
+            </tr>
+            <tr>
+                <th>Rate Date</th>
+                <td id="resDate"></td>
+            </tr>
+            <tr>
+                <th>API Endpoint Used</th>
+                <td><code id="resEndpoint"></code></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/currencies');
+                const currencies = await response.json();
+
+                const fromSelect = document.getElementById('fromCurrency');
+                const toSelect = document.getElementById('toCurrency');
+
+                fromSelect.innerHTML = '';
+                toSelect.innerHTML = '';
+
+                Object.keys(currencies).sort().forEach(code => {
+                    const optionFrom = new Option(`${code} - ${currencies[code]}`, code);
+                    const optionTo = new Option(`${code} - ${currencies[code]}`, code);
+
+                    if (code === 'USD') optionFrom.selected = true;
+                    if (code === 'INR') optionTo.selected = true;
+
+                    fromSelect.add(optionFrom);
+                    toSelect.add(optionTo);
+                });
+            } catch (err) {
+                console.warn('Using default currency dropdowns:', err);
+            }
+        });
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').style.display = 'none';
+            const errDiv = document.getElementById('errorMessage');
+            errDiv.innerText = 'Error: ' + msg;
+            errDiv.style.display = 'block';
+        }
+
+        function displayResults(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+
+            document.getElementById('resSource').innerText = data.source;
+            document.getElementById('resAmount').innerText = `${data.amount} ${data.from}`;
+            document.getElementById('resConverted').innerText = `${Number(data.result).toFixed(2)} ${data.to}`;
+            document.getElementById('resRate').innerText = `1 ${data.from} = ${Number(data.rate).toFixed(4)} ${data.to}`;
+            document.getElementById('resDate').innerText = data.date;
+            document.getElementById('resEndpoint').innerText = data.endpoint;
+
+            document.getElementById('resultsSection').style.display = 'block';
+        }
+
+        async function convertViaBackend() {
+            const amount = document.getElementById('amount').value;
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount.');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const endpoint = `/api/convert-backend?amount=${amount}&from=${from}&to=${to}`;
+                const response = await fetch(endpoint);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Backend conversion failed.');
+                }
+
+                data.endpoint = endpoint + ' (Server then queries api.frankfurter.dev)';
+                displayResults(data);
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        async function convertViaFrontend() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount.');
+                return;
+            }
+
+            showLoading();
+
+            if (from === to) {
+                displayResults({
+                    source: 'Frontend (Direct Browser Fetch)',
+                    amount: amount,
+                    from: from,
+                    to: to,
+                    rate: 1,
+                    result: amount,
+                    date: new Date().toISOString().split('T')[0],
+                    endpoint: 'Client-side 1:1 calculation (Same currency selected)'
+                });
+                return;
+            }
+
+            try {
+                const url = `https://api.frankfurter.dev/v1/latest?amount=${amount}&from=${from}&to=${to}`;
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Direct API call failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                const converted = data.rates[to];
+                const unitRate = converted / amount;
+
+                displayResults({
+                    source: 'Frontend (Direct Browser Fetch -> https://api.frankfurter.dev)',
+                    amount: amount,
+                    from: from,
+                    to: to,
+                    rate: unitRate,
+                    result: converted,
+                    date: data.date,
+                    endpoint: url
+                });
+            } catch (err) {
+                showError('Frontend fetch failed: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ERP System</title>
+</head>
+<body>
+    <h1>Admin Panel - Employee Management (ERP)</h1>
+    <p>Logged in as: <strong><%= admin %></strong></p>
+
+    <p>
+        <a href="/employees/add"><strong>+ Add New Employee</strong></a> | 
+        <a href="/logout">Logout</a>
+    </p>
+
+    <hr>
+
+    <% if (error) { %>
+        <p style="color: red;"><strong>Error:</strong> <%= error %></p>
+    <% } %>
+
+    <h3>Employees List (Total: <%= employees.length %>)</h3>
+
+    <% if (employees.length === 0) { %>
+        <p>No employee records found. Click <a href="/employees/add">here</a> to add the first employee.</p>
+    <% } else { %>
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Emp ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Basic (₹)</th>
+                    <th>HRA (₹)</th>
+                    <th>DA (₹)</th>
+                    <th>Deductions (₹)</th>
+                    <th>Gross (₹)</th>
+                    <th>Net Salary (₹)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% employees.forEach(function(emp) { %>
+                    <tr>
+                        <td><strong><%= emp.empid %></strong></td>
+                        <td><%= emp.name %></td>
+                        <td><%= emp.email %></td>
+                        <td><%= emp.department %></td>
+                        <td><%= emp.designation %></td>
+                        <td><%= emp.basicSalary.toFixed(2) %></td>
+                        <td><%= emp.hra.toFixed(2) %></td>
+                        <td><%= emp.da.toFixed(2) %></td>
+                        <td><%= emp.deductions.toFixed(2) %></td>
+                        <td><%= emp.grossSalary.toFixed(2) %></td>
+                        <td><strong>₹<%= emp.netSalary.toFixed(2) %></strong></td>
+                        <td>
+                            <a href="/employees/edit/<%= emp._id %>">Edit</a> | 
+                            <a href="/employees/delete/<%= emp._id %>" onclick="return confirm('Are you sure you want to delete <%= emp.name %> (<%= emp.empid %>)?');">Delete</a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <br>
+</body>
+</html>

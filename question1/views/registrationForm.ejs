@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <script>
+        function clearForm(){
+            let form = document.getElementById('form');
+            form.reset();
+            let errorBox = document.getElementById('error-box');
+            if (errorBox) {
+                errorBox.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Register Your Self Here...</h1>
+
+    <% if (typeof errors !== 'undefined' && errors && Object.keys(errors).length > 0) { %>
+        <div id="error-box" style="color: red; margin-bottom: 15px;">
+            <h3>Please fix the following errors:</h3>
+            <ul>
+                <% Object.keys(errors).forEach(function(key) { %>
+                    <li><%= errors[key].msg || errors[key] %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="/register" method="post" enctype="multipart/form-data" id="form">
+        <label for="username">Username : </label>
+        <input 
+            type="text" 
+            name="username" 
+            id="username" 
+            placeholder="Jack Reacher"
+            value="<%= (typeof oldData !== 'undefined' && oldData.username) ? oldData.username : '' %>"
+        >
+        <br><br>
+
+        <label for="password">Password : </label>
+        <input 
+            type="password" 
+            name="password" 
+            id="password" 
+            placeholder="Strong like you"
+            value="<%= (typeof oldData !== 'undefined' && oldData.password) ? oldData.password : '' %>"
+        >
+        <br><br>
+
+        <label for="confirmpwd">Confirm Password : </label>
+        <input 
+            type="password" 
+            name="confirmpwd" 
+            id="confirmpwd" 
+            placeholder="Same as previous"
+            value="<%= (typeof oldData !== 'undefined' && oldData.confirmpwd) ? oldData.confirmpwd : '' %>"
+        >
+        <br><br>
+
+        <label for="email">Email : </label>
+        <input 
+            type="email" 
+            name="email" 
+            id="email" 
+            placeholder="reacher@gmail.com"
+            value="<%= (typeof oldData !== 'undefined' && oldData.email) ? oldData.email : '' %>"
+        >
+        <br><br>
+
+        <% const selectedGender = (typeof oldData !== 'undefined' && oldData.gender) ? oldData.gender : ''; %>
+        <label for="gender">Gender : </label>
+        <input type="radio" name="gender" id="male" value="Male" <%= selectedGender === 'Male' ? 'checked' : '' %>> Male
+        <input type="radio" name="gender" id="female" value="Female" <%= selectedGender === 'Female' ? 'checked' : '' %>> Female
+        <br><br>
+        
+        <% 
+            let selectedHobbies = [];
+            if (typeof oldData !== 'undefined' && oldData.hobbies) {
+                selectedHobbies = Array.isArray(oldData.hobbies) ? oldData.hobbies : [oldData.hobbies];
+            }
+        %>
+        <label for="hobbies">Hobbies : </label>
+        <input type="checkbox" name="hobbies" id="Coding" value="Coding" <%= selectedHobbies.includes('Coding') ? 'checked' : '' %>> Coding
+        <input type="checkbox" name="hobbies" id="Reading" value="Reading" <%= selectedHobbies.includes('Reading') ? 'checked' : '' %>> Reading
+        <input type="checkbox" name="hobbies" id="Traveling" value="Traveling" <%= selectedHobbies.includes('Traveling') ? 'checked' : '' %>> Traveling
+        <input type="checkbox" name="hobbies" id="Sports" value="Sports" <%= selectedHobbies.includes('Sports') ? 'checked' : '' %>> Sports
+        <input type="checkbox" name="hobbies" id="Nothing" value="Nothing" <%= selectedHobbies.includes('Nothing') ? 'checked' : '' %>> Nothing
+        <br><br>
+
+        <label for="propic">Profile Picture : </label>
+        <input type="file" name="propic" id="propic">
+        <br><br>
+
+        <label for="otherpic">Other Pictures : </label>
+        <input type="file" name="otherpic" id="otherpic" multiple>
+        <br><br>
+
+        <input type="button" value="Cancel" onclick="clearForm()">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

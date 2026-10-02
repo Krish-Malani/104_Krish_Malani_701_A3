@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - ERP System</title>
+</head>
+<body>
+    <h1>ERP System - Admin Panel Login</h1>
+
+    <% if (error) { %>
+        <p style="color: red;"><strong>Error:</strong> <%= error %></p>
+    <% } %>
+
+    <% if (message) { %>
+        <p style="color: green;"><strong>Notice:</strong> <%= message %></p>
+    <% } %>
+
+    <form action="/login" method="post">
+        <label for="username">Admin Username : </label>
+        <input type="text" name="username" id="username" placeholder="admin" required>
+        <br><br>
+
+        <label for="password">Password : </label>
+        <input type="password" name="password" id="password" placeholder="admin" required>
+        <br><br>
+
+        <input type="submit" value="Login to Admin Panel">
+    </form>
+</body>
+</html>

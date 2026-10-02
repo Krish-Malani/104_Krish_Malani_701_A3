@@ -1,0 +1,19 @@
+{
+  "name": "question6",
+  "version": "1.0.0",
+  "description": "Free Currency Converter Utility API integration from Frontend and Backend",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

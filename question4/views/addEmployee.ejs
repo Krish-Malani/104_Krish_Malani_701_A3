@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Employee - ERP System</title>
+    <script>
+        function calculateSalary() {
+            const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
+            const hra = parseFloat(document.getElementById('hra').value) || 0;
+            const da = parseFloat(document.getElementById('da').value) || 0;
+            const deductions = parseFloat(document.getElementById('deductions').value) || 0;
+
+            const gross = basic + hra + da;
+            const net = gross - deductions;
+
+            document.getElementById('grossDisplay').innerText = gross.toFixed(2);
+            document.getElementById('netDisplay').innerText = net.toFixed(2);
+        }
+
+        function autoFillAllowances() {
+            const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
+            if (basic > 0) {
+                document.getElementById('hra').value = (basic * 0.20).toFixed(2);
+                document.getElementById('da').value = (basic * 0.10).toFixed(2);
+                document.getElementById('deductions').value = (basic * 0.05).toFixed(2);
+                calculateSalary();
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Add New Employee</h1>
+    <p><a href="/dashboard">Back to Employees List</a></p>
+
+    <% if (error) { %>
+        <p style="color: red;"><strong>Error:</strong> <%= error %></p>
+    <% } %>
+
+    <form action="/employees/add" method="post">
+        <h3>1. Employee Information</h3>
+        <label for="name">Full Name : </label>
+        <input type="text" name="name" id="name" placeholder="John Doe" required>
+        <br><br>
+
+        <label for="email">Email Address : </label>
+        <input type="email" name="email" id="email" placeholder="john@example.com" required>
+        <br><br>
+
+        <label for="phone">Phone Number : </label>
+        <input type="text" name="phone" id="phone" placeholder="9876543210">
+        <br><br>
+
+        <label for="department">Department : </label>
+        <select name="department" id="department" required>
+            <option value="">-- Select Department --</option>
+            <option value="IT & Software">IT & Software</option>
+            <option value="HR & Admin">HR & Admin</option>
+            <option value="Finance & Accounts">Finance & Accounts</option>
+            <option value="Sales & Marketing">Sales & Marketing</option>
+            <option value="Operations">Operations</option>
+        </select>
+        <br><br>
+
+        <label for="designation">Designation : </label>
+        <input type="text" name="designation" id="designation" placeholder="Software Engineer" required>
+        <br><br>
+
+        <hr>
+
+        <h3>2. Salary Calculation (in ₹)</h3>
+        <label for="basicSalary">Basic Salary : </label>
+        <input type="number" step="0.01" name="basicSalary" id="basicSalary" placeholder="50000" oninput="calculateSalary()" onchange="autoFillAllowances()" required>
+        <small>(Type basic salary to auto-calculate standard allowances)</small>
+        <br><br>
+
+        <label for="hra">HRA (House Rent Allowance) : </label>
+        <input type="number" step="0.01" name="hra" id="hra" placeholder="10000" value="0" oninput="calculateSalary()" required>
+        <br><br>
+
+        <label for="da">DA (Dearness Allowance) : </label>
+        <input type="number" step="0.01" name="da" id="da" placeholder="5000" value="0" oninput="calculateSalary()" required>
+        <br><br>
+
+        <label for="deductions">Deductions (PF / Tax) : </label>
+        <input type="number" step="0.01" name="deductions" id="deductions" placeholder="2500" value="0" oninput="calculateSalary()" required>
+        <br><br>
+
+        <table border="1" cellpadding="6" cellspacing="0">
+            <tr>
+                <th>Gross Salary (Basic + HRA + DA)</th>
+                <th>Net Salary (Gross - Deductions)</th>
+            </tr>
+            <tr>
+                <td>₹<span id="grossDisplay">0.00</span></td>
+                <td><strong>₹<span id="netDisplay">0.00</span></strong></td>
+            </tr>
+        </table>
+
+        <br><br>
+
+        <input type="submit" value="Save Employee & Send Credentials Email">
+        <a href="/dashboard"><input type="button" value="Cancel"></a>
+    </form>
+</body>
+</html>

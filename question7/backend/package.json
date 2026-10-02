@@ -1,0 +1,20 @@
+{
+  "name": "question7-backend",
+  "version": "1.0.0",
+  "description": "Shopping Cart API with Admin & User site, 2-Level Categories, and Products using MERN",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

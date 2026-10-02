@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Details</title>
+</head>
+<body>
+    <h1>User Registration Details</h1>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td><strong>Username</strong></td>
+            <td><%= user.username %></td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td><%= user.email %></td>
+        </tr>
+        <tr>
+            <td><strong>Gender</strong></td>
+            <td><%= user.gender %></td>
+        </tr>
+        <tr>
+            <td><strong>Hobbies</strong></td>
+            <td>
+                <% if (Array.isArray(user.hobbies)) { %>
+                    <%= user.hobbies.join(', ') %>
+                <% } else if (user.hobbies) { %>
+                    <%= user.hobbies %>
+                <% } else { %>
+                    None
+                <% } %>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Profile Picture</strong></td>
+            <td>
+                <% if (user.propic) { %>
+                    <img src="/uploads/<%= user.propic.filename %>" alt="Profile Picture" width="100" height="100">
+                    <br>
+                    <%= user.propic.originalname %>
+                    <br>
+                    <a href="/download/<%= user.propic.filename %>?original=<%= encodeURIComponent(user.propic.originalname) %>">Download Profile Picture</a>
+                <% } else { %>
+                    No profile picture uploaded
+                <% } %>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Other Pictures</strong></td>
+            <td>
+                <% if (user.otherpics && user.otherpics.length > 0) { %>
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <tr>
+                            <th>Image</th>
+                            <th>Original File Name</th>
+                            <th>Download</th>
+                        </tr>
+                        <% user.otherpics.forEach(function(pic) { %>
+                            <tr>
+                                <td>
+                                    <img src="/uploads/<%= pic.filename %>" alt="Other Pic" width="80" height="80">
+                                </td>
+                                <td><%= pic.originalname %></td>
+                                <td>
+                                    <a href="/download/<%= pic.filename %>?original=<%= encodeURIComponent(pic.originalname) %>">Download</a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% } else { %>
+                    No other pictures uploaded
+                <% } %>
+            </td>
+        </tr>
+    </table>
+
+    <br><br>
+    <a href="/">Register Another User</a>
+</body>
+</html>

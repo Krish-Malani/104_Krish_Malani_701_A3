@@ -1,0 +1,23 @@
+{
+  "name": "question4",
+  "version": "1.0.0",
+  "description": "Admin Panel ERP System with Employee CRUD, Salary Calculation, Email Notification, and Mongoose",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.9.2",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

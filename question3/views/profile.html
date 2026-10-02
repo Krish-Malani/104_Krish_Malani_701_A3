@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile (Protected Route 2)</title>
+</head>
+<body>
+    <h1>User Profile (Protected Route 2)</h1>
+
+    <p>
+        <a href="/dashboard">Back to Dashboard</a> | 
+        <a href="/profile">My Profile</a> | 
+        <a href="/logout">Logout</a>
+    </p>
+
+    <hr>
+
+    <h3>Account Profile Details:</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Field</th>
+            <th>Information</th>
+        </tr>
+        <tr>
+            <td><strong>Username</strong></td>
+            <td>{{username}}</td>
+        </tr>
+        <tr>
+            <td><strong>Full Name</strong></td>
+            <td>{{fullName}}</td>
+        </tr>
+        <tr>
+            <td><strong>Registered Email</strong></td>
+            <td>{{email}}</td>
+        </tr>
+        <tr>
+            <td><strong>Assigned Role</strong></td>
+            <td>{{role}}</td>
+        </tr>
+        <tr>
+            <td><strong>Logged In Since</strong></td>
+            <td>{{loginTime}}</td>
+        </tr>
+    </table>
+</body>
+</html>
